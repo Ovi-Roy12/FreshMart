@@ -1,0 +1,37 @@
+<!-- Navbar -->
+<nav class="bg-blue-600 text-white p-4 shadow-lg">
+  <div class="container mx-auto flex justify-between items-center">
+      <!-- Logo -->
+      <a href="{% url 'home' %}" class="text-xl font-bold flex items-center space-x-2">
+          <span>FreshMart</span>
+      </a>
+
+      <!-- Navigation Links -->
+      <div class="hidden md:flex space-x-6">
+          <a href="{% url 'home' %}" class="hover:text-yellow-300">Home</a>
+          <a href="{% url 'about' %}" class="hover:text-yellow-300">About</a>
+          <a href="{% url 'contact' %}" class="hover:text-yellow-300">Contact</a>
+      </div>
+
+      <!-- Right Side: Cart & Auth -->
+      <div class="flex items-center space-x-4">
+          <!-- Cart Icon -->
+          <a href="{% url 'view_cart' %}" class="relative">
+              <svg class="w-6 h-6 hover:text-yellow-300 transition" fill="none" stroke="currentColor" stroke-width="2"
+                  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l1 5h13l1-5h2"></path>
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+              </svg>
+          </a>
+
+          <!-- Sign In & Sign Up -->
+          {% if user.is_authenticated %}
+              <a href="{% url 'logout' %}" class="px-4 py-2 bg-red-500 rounded-lg hover:bg-red-400">Sign out</a>
+          {% else %}
+              <a href="{% url 'login' %}" class="px-4 py-2 bg-yellow-500 rounded-lg hover:bg-yellow-400">Sign In</a>
+              <a href="{% url 'register' %}" class="px-4 py-2 bg-green-500 rounded-lg hover:bg-green-400">Sign Up</a>
+          {% endif %}
+      </div>
+  </div>
+</nav>

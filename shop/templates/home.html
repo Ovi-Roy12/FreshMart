@@ -1,0 +1,153 @@
+{% extends 'base.html' %}{% load static %}
+{% block content %}
+
+<!-- Navbar -->
+{% include 'navbar.html' %}
+
+<!-- Hero Section -->
+<section class="relative w-full h-[500px] sm:h-[600px] flex items-center justify-center text-white text-center px-6" style="background-image: url('{% static 'images/banner.jpg' %}'); background-size: cover; background-position: center;">
+  <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+  <div class="relative z-10 p-8 rounded-lg max-w-2xl">
+    <h1 class="text-5xl sm:text-6xl font-bold mb-4">Welcome to Our Shop</h1>
+    <p class="text-lg sm:text-xl text-gray-200">Explore the best products at unbeatable prices!</p>
+    <a href="#products" class="mt-6 inline-block bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-6 py-3 rounded-lg transition duration-200">Shop Now</a>
+  </div>
+</section>
+
+
+<!-- Filter & Search -->
+<div class="flex flex-wrap items-center justify-between px-6 py-6">
+  <div>
+    <label for="category" class="text-gray-700 font-semibold">Filter by Category:</label>
+    <select id="category" class="border p-2 rounded-lg">
+      <option value="all">All</option>
+      <option value="Grocery_Item">Grocery_Item</option>
+    </select>
+  </div>
+
+  <input type="text" id="search" placeholder="Search for products..." class="border px-4 py-2 rounded-lg w-64">
+</div>
+
+<!-- Product Grid -->
+<h1 class="text-3xl font-bold text-center text-gray-800 my-6">Our Products</h1>
+
+<div id="products" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-6">
+  {% for product in products %}
+    <div class="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:scale-105" data-category="{{ product.category }}">
+      <div class="relative">
+        <img src="{{ product.image.url }}" class="w-full h-56 object-cover" alt="{{ product.name }}">
+        
+        {% if product.discount %}
+        <span class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">-{{ product.discount }}%</span>
+        {% endif %}
+      </div>
+
+      <div class="p-4 text-center">
+        <h3 class="text-lg font-semibold text-gray-900">{{ product.name }}</h3>
+
+        <!-- Fake Ratings -->
+        <div class="flex justify-center my-2">
+          {% for i in "12345"|make_list %}
+            {% if forloop.counter <= product.rating %}
+              <svg class="w-4 h-4 text-yellow-500 fill-current" viewBox="0 0 24 24"><path d="M12 17.27l5.18 3.73-1.64-6.28 4.78-3.73-6.29-.54L12 2 9.97 9.45l-6.29.54 4.78 3.73-1.64 6.28z"/></svg>
+            {% else %}
+              <svg class="w-4 h-4 text-gray-300 fill-current" viewBox="0 0 24 24"><path d="M12 17.27l5.18 3.73-1.64-6.28 4.78-3.73-6.29-.54L12 2 9.97 9.45l-6.29.54 4.78 3.73-1.64 6.28z"/></svg>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <p class="text-gray-600 mt-2">Price: <span class="font-bold text-gray-800">${{ product.price }}</span></p>
+        <p class="text-gray-500 mt-2 text-sm">{{ product.description|truncatewords:15 }}</p>
+
+        <a href="{% url 'add_to_cart' product.id %}" class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold px-5 py-2 rounded-lg transition duration-200">
+          Add to Cart
+        </a>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<!-- Testimonials Section -->
+<section class="mt-8 py-12 bg-gray-100">
+  <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">What Our Customers Say</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-6">
+    {% for testimonial in testimonials %}
+      <div class="bg-white p-6 rounded-lg shadow-md text-center hover:shadow-lg transition duration-300">
+        <p class="text-gray-700 italic">"{{ testimonial.review }}"</p>
+        <h4 class="mt-3 font-semibold text-gray-900">{{ testimonial.name }}</h4>
+        <p class="text-sm text-gray-500">{{ testimonial.location }}</p>
+      </div>
+    {% empty %}
+      <p class="text-center text-gray-500 col-span-3">No reviews yet.</p>
+    {% endfor %}
+  </div>
+</section>
+
+
+<!-- Newsletter -->
+<section class="mt-8 py-12 bg-blue-500 text-white text-center">
+  <h2 class="text-3xl font-bold mb-4">Stay Updated with Our Newsletter</h2>
+  <p class="text-lg mb-6">Subscribe to receive the latest offers and product updates.</p>
+  <form class="flex justify-center">
+    <input type="email" placeholder="Enter your email..." class="px-4 py-2 w-1/2 border border-white rounded-lg focus:outline-none">
+    <button class="ml-2 px-5 py-2 bg-yellow-400 text-black font-semibold rounded-lg hover:bg-yellow-500 transition duration-200">Subscribe</button>
+  </form>
+</section>
+
+<!-- Success Message -->
+{% if messages %}
+<div id="message-container" class="fixed top-0 left-1/2 transform -translate-x-1/2 z-50 mt-8 space-y-4">
+  {% for message in messages %}
+  <div class="bg-green-500 text-white p-3 rounded-lg shadow-md w-72 mx-auto message">
+    {{ message }}
+  </div>
+  {% endfor %}
+</div>
+
+
+<script>
+  setTimeout(function () {
+    let messageContainer = document.getElementById("message-container");
+    if (messageContainer) {
+      messageContainer.style.display = "none";
+    }
+  }, 5000); 
+</script>
+{% endif %}
+
+
+<!-- Footer -->
+{% include 'footer.html' %}
+
+<script>
+  // Category Filter
+  document.getElementById('category').addEventListener('change', function() {
+    let category = this.value;
+    let products = document.querySelectorAll('#products > div');
+
+    products.forEach(product => {
+      if (category === "all" || product.dataset.category === category) {
+        product.style.display = "block";
+      } else {
+        product.style.display = "none";
+      }
+    });
+  });
+
+  // Search Filter
+  document.getElementById('search').addEventListener('input', function() {
+    let searchText = this.value.toLowerCase();
+    let products = document.querySelectorAll('#products > div');
+
+    products.forEach(product => {
+      let productName = product.querySelector('h3').textContent.toLowerCase();
+      if (productName.includes(searchText)) {
+        product.style.display = "block";
+      } else {
+        product.style.display = "none";
+      }
+    });
+  });
+</script>
+
+{% endblock %}
